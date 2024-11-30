@@ -5,8 +5,8 @@ RUN apk add --no-cache curl unzip && \
     curl -o /tmp/wp-cli.phar https://github.com/wp-cli/wp-cli/releases/download/v2.11.0/wp-cli-2.11.0.phar && \
     chmod +x /tmp/wp-cli.phar && \
     mv /tmp/wp-cli.phar /usr/local/bin/wp && \
-    wp --info && \   # 验证 wp-cli 安装是否成功
-    apk del curl
+    wp --info    # 验证 wp-cli 安装是否成功
+
 
 # 下载并解压 WebStack 主题
 RUN curl -o /tmp/webstack.zip https://github.com/owen0o0/WebStack/archive/refs/tags/1.2024.zip && \
