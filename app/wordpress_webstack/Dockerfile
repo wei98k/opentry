@@ -1,0 +1,1 @@
+from registry.cn-hangzhou.aliyuncs.com/webdock/php-fpm:latest
