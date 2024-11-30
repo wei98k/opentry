@@ -20,5 +20,5 @@ RUN chmod +x /opt/wp_setup.sh
 
 # 工作目录和默认入口点
 WORKDIR /var/www/html
-ENTRYPOINT ["/opt/wp_setup.sh"]
+#ENTRYPOINT ["/opt/wp_setup.sh"]
 CMD ["php-fpm"]
