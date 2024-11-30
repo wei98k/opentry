@@ -2261,6 +2261,7 @@ services:
         WORDPRESS_TABLE_PREFIX: wp_
       volumes:
         - ${APP_CODE_PATH_HOST}/wordpress_webstack/code:/var/www/html
+        - ${APP_CODE_PATH_HOST}/wordpress_webstack/wp_setup.sh:/opt/wp_setup.sh
       depends_on:
         - mysql
         - nginx
