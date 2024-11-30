@@ -21,6 +21,7 @@ if [ ! -f wp-config.php ]; then
 
     # 安装并激活 WebStack 主题
     echo "Installing WebStack theme..."
+    mv /usr/src/webstack /var/www/html/wp-content/themes/
     wp theme activate webstack
 
     echo "Setup completed."
