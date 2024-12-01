@@ -2269,4 +2269,5 @@ services:
       networks:
         - frontend
         - backend
+      # command: ["/bin/sh", "/opt/wp_setup.sh"]
         

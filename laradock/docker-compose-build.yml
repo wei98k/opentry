@@ -2248,7 +2248,12 @@ services:
         - backend
 ### wordpress-webstack ##################################################
     wordpress-webstack:
-      build: ../app/wordpress_webstack
+      build: 
+        context: ../app/wordpress_webstack
+        args: 
+          - http_proxy=http://192.168.1.206:7890
+          - https_proxy=http://192.168.1.206:7890
+          - no_proxy
       environment:
         WORDPRESS_DB_HOST: mysql
         WORDPRESS_DB_NAME: wordpress_webstack
@@ -2261,6 +2266,7 @@ services:
         - mysql
         - nginx
       restart: always
+      
       networks:
         - frontend
         - backend
