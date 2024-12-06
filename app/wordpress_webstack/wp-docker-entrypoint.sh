@@ -1,3 +1,4 @@
+
 #!/bin/bash
 set -euo pipefail
 
@@ -252,10 +253,12 @@ $user = getenv('WORDPRESS_DB_USER');
 $pass = getenv('WORDPRESS_DB_PASSWORD');
 $dbName = getenv('WORDPRESS_DB_NAME');
 
+
 $maxTries = 10;
 do {
 	$mysql = new mysqli($host, $user, $pass, '', $port, $socket);
 	if ($mysql->connect_error) {
+		fwrite($stderr, "\n" . 'MySQL Connection Info: ' . 'host:  ' . $host . 'user: '. $user . 'pass: '. $pass  . $mysql->connect_error . "\n");
 		fwrite($stderr, "\n" . 'MySQL Connection Error: (' . $mysql->connect_errno . ') ' . $mysql->connect_error . "\n");
 		--$maxTries;
 		if ($maxTries <= 0) {
@@ -264,6 +267,15 @@ do {
 		sleep(3);
 	}
 } while ($mysql->connect_error);
+
+//创建前先删除之前的数据库
+
+
+if (!$mysql->query('CREATE DATABASE IF NOT EXISTS `' . $mysql->real_escape_string($dbName) . '`')) {
+	fwrite($stderr, "\n" . 'MySQL "CREATE DATABASE" Error: ' . $mysql->error . "\n");
+	$mysql->close();
+	exit(1);
+}
 
 $mysql->close();
 EOPHP
@@ -280,5 +292,33 @@ EOPHP
 		unset "$e"
 	done
 fi
-echo "exec done $@"
+
+# 增加重置的逻辑
+# 配置 WordPress
+envs=(
+    WORDPRESS_RESET
+)
+
+if [ "$WORDPRESS_RESET" ]; then
+    cd /var/www/html
+    echo "Reset up WordPress..."
+    wp core install \
+        --allow-root \
+        --url="http://webstack.opentry.test" \
+        --title="WebStack Demo" \
+        --admin_user="opentry" \
+        --admin_password="opentry@123" \
+        --admin_email="demo@opentry.com" \
+        --locale=zh_CN
+
+    # 安装并激活 WebStack 主题
+    echo "Installing WebStack theme..."
+    if [ ! -d "/var/www/html/wp-content/themes/webstack" ]; then
+        mv /usr/src/webstack /var/www/html/wp-content/themes/
+        wp --allow-root theme activate webstack
+    fi
+    echo "Reset completed."
+fi
+
+
 exec "$@"

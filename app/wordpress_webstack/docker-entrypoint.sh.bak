@@ -256,6 +256,7 @@ $maxTries = 10;
 do {
 	$mysql = new mysqli($host, $user, $pass, '', $port, $socket);
 	if ($mysql->connect_error) {
+		fwrite($stderr, "\n" . 'MySQL Connection Info: ' . 'host:  ' . $host . 'user: '. $user . 'pass: '. $pass  . $mysql->connect_error . "\n");
 		fwrite($stderr, "\n" . 'MySQL Connection Error: (' . $mysql->connect_errno . ') ' . $mysql->connect_error . "\n");
 		--$maxTries;
 		if ($maxTries <= 0) {
@@ -264,6 +265,12 @@ do {
 		sleep(3);
 	}
 } while ($mysql->connect_error);
+
+if (!$mysql->query('CREATE DATABASE IF NOT EXISTS `' . $mysql->real_escape_string($dbName) . '`')) {
+	fwrite($stderr, "\n" . 'MySQL "CREATE DATABASE" Error: ' . $mysql->error . "\n");
+	$mysql->close();
+	exit(1);
+}
 
 $mysql->close();
 EOPHP
@@ -280,5 +287,5 @@ EOPHP
 		unset "$e"
 	done
 fi
-echo "exec done $@"
+
 exec "$@"
