@@ -2246,14 +2246,27 @@ services:
       networks:
         - frontend
         - backend
+### wordpress ##################################################
+    wordpress:
+      build:
+        context: ../app/wordpress
+        args:
+          - http_proxy=http://192.168.2.206:7890
+          - https_proxy=http://192.168.2.206:7890
+          - no_proxy
+      ports:
+        - "9080:80"
+      volumes:
+        - ${APP_CODE_PATH_HOST}/wordpress/code:/var/www/html
+      environment:
+        WORDPRESS_DB_HOST: mysql
+        WORDPRESS_DB_USER: root
+        WORDPRESS_DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        WORDPRESS_DB_NAME: wordpress_webstack
 ### wordpress-webstack ##################################################
     wordpress-webstack:
       build: 
         context: ../app/wordpress_webstack
-        args: 
-          - http_proxy=http://192.168.1.206:7890
-          - https_proxy=http://192.168.1.206:7890
-          - no_proxy
       environment:
         WORDPRESS_DB_HOST: mysql
         WORDPRESS_DB_NAME: wordpress_webstack
